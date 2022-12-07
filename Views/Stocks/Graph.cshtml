@@ -1,0 +1,76 @@
+@model IEnumerable<Stock>
+@{
+    ViewData["Title"] = @Model.First().Name;
+}
+ 
+
+<div class='containrer p-3'>
+    <div class= "row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">@Model.First().Name</h2>
+        </div>
+        <div class="col-6 text-end">
+            <a asp-controller="Stocks" asp-action="Detail" asp-route-Symbol="@Model.First().Symbol" class="btn btn-secondary" style="width:150px">Back</a>
+        </div>
+    </div>
+
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<script>
+window.onload = function () {
+ 
+var dataPoints = [];
+var chart = new CanvasJS.Chart("chartContainer", {
+
+	animationEnabled: true,
+	theme: "dark1",
+	backgroundColor: null,
+
+	axisY: {
+		title: "USD",
+		titleFontSize: 24,
+		prefix: "$",
+		crosshair: {
+			enabled: true,
+			valueFormatString: "$#,##0.##",
+			snapToDataPoint: true
+		}
+	},
+	axisX: {
+		crosshair: {
+			enabled: true,
+			snapToDataPoint: true
+		}
+	},
+	data: [{
+		type: "line",
+		yValueFormatString: "$#,##0.##",
+		 xValueType: "dateTime",
+		//dataPoints: dataPoints
+        dataPoints: @Html.Raw(ViewBag.DataPoints)
+	}]
+});
+chart.render();
+
+}
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; width: 100%;"></div>
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+</body>
+</html>     
+
+<div class='containrer p-3'>
+    <div class= "col pt-4 text-center">
+			    <a asp-controller="Stocks" asp-action="Graph" asp-route-Symbol="@Model.First().Symbol" asp-route-nod=30 class="btn btn-tertiary" >1 Month</a>
+				<a asp-controller="Stocks" asp-action="Graph" asp-route-Symbol="@Model.First().Symbol" asp-route-nod=90 class="btn btn-tertiary" >3 Months</a>
+				<a asp-controller="Stocks" asp-action="Graph" asp-route-Symbol="@Model.First().Symbol" asp-route-nod=180 class="btn btn-tertiary" >6 Months</a>
+				<a asp-controller="Stocks" asp-action="Graph" asp-route-Symbol="@Model.First().Symbol" asp-route-nod=365 class="btn btn-tertiary" >1 Year</a>
+				<a asp-controller="Stocks" asp-action="Graph" asp-route-Symbol="@Model.First().Symbol" asp-route-nod=1095 class="btn btn-tertiary" >3 Years</a>
+				<a asp-controller="Stocks" asp-action="Graph" asp-route-Symbol="@Model.First().Symbol" asp-route-nod="@ViewBag.TotalLength" class="btn btn-tertiary" >All Time</a></div>
+		</div>
+    </div>

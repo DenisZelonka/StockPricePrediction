@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager;
+@model IEnumerable<Stock>
+@{
+    ViewData["Title"] = @Model.First().Name;
+}
+
+<div class='containrer p-3'>
+    <div class= "row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">@Model.First().Name</h2>
+        </div>
+        <div class="col-6 text-end">
+            @if(signInManager.IsSignedIn(User) && (User.IsInRole("admin") || User.IsInRole("superuser") )) {
+                <a asp-controller="Stocks" asp-action="Index" class="btn btn-primary" style="width:150px">Predict</a> }
+                <a asp-controller="Stocks" asp-action="Graph" asp-route-Symbol="@Model.First().Symbol" asp-route-nod=30 class="btn btn-primary" style="width: 150px;">Show Graph</a>
+            <a asp-controller="Stocks" asp-action="Index" class="btn btn-secondary" style="width:150px">Back</a>
+        </div>
+    </div>
+
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Volume
+                </th>
+                <th>
+                    Price
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            
+             @foreach (var obj in Model)
+            {
+                <tr>
+                    <td width="30%">
+                        @obj.Date
+                    </td>
+                    <td width="30%">
+                        @obj.Volume.ToString("N0")
+                    </td>
+                    <td width="20%">
+                        @string.Concat("$"+obj.CloseorLast.ToString())
+                    </td>
+                </tr>
+            }
+        </tbody> 
+    </table>
+    
+</div>

@@ -1,0 +1,70 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager;
+@model IEnumerable<Stock>
+@{
+    ViewData["Title"] = "Stocks";
+}
+
+<div class='containrer p-3'>
+    <div class= "row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Stocks</h2>
+        </div>
+        <div class="col-6 text-end">
+            </a>
+        </div>
+    </div>
+
+
+    <table class="table table-bordered table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Symbol
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Volume
+                </th>
+                <th>
+                    Price
+                </th>
+                <th>
+                    Detail
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model)
+            {
+                <tr>
+                    <td width="40%">
+                        @obj.Name
+                    </td>
+                    <td width="10%">
+                        @obj.Symbol
+                    </td>
+                    <td width="15%">
+                        @obj.Date
+                    </td>
+                    <td width="20%">
+                        @obj.Volume.ToString("N0")
+                    </td>
+                    <td width="15%">
+                        @string.Concat("$"+obj.CloseorLast.ToString())
+                    </td>
+                    <td>
+                        @if(signInManager.IsSignedIn(User)) {
+                        <a asp-controller="Stocks" asp-action="Detail" asp-route-Symbol="@obj.Symbol">Detail</a> }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

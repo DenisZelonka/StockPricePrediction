@@ -1,0 +1,55 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    ViewData["Title"] = "Stock Market Prediction";
+}
+
+@if(@User.Identity?.Name == null)
+{
+<div class="text-center">
+    <h1 style="color: white;">Welcome</h1>
+</div>
+<div style="display: block; width:100%">
+    <div style="width:50%; float: left; display: inline-block;">
+        <h3 style="color: white;">What is the Stock Market ?</h3>
+        <p>A stock market is a public market where you can buy and sell shares for publicly listed companies. 
+            The stocks, also known as equities, represent ownership in the company. 
+            The stock exchange is the mediator that allows the buying and selling of shares. </p>
+
+        <h3 style="color: white;">What is Stock Price Prediction ?</h3>
+        <p>Stock Price Prediction using machine learning helps you discover the future value of company stock and other financial assets traded on an exchange. 
+        The entire idea of predicting stock prices is to gain significant profits. Predicting how the stock market will perform is a hard task to do. 
+        There are other factors involved in the prediction, such as physical and psychological factors, rational and irrational behavior, and so on. 
+        All these factors combine to make share prices dynamic and volatile. This makes it very difficult to predict stock prices with high accuracy. </p>
+
+        <h3 style="color: white;">Why Us ?</h3>
+        <p>There are two reasons for this. First, we are good at what we do and we get results. 
+            And second, our model for stock market prediction is best on the marker.
+            We use sophisticated algorithms to predict real future value of stocks.
+            And last but not least, we will refund your money in the event of an unsuccessful purchase of shares.</p>
+        
+        <h3 style="color: white;">Do you wanna make real money ? <a asp-area="Identity" asp-page="/Account/Register">Register right now</a>
+            
+        </h3> 
+    </div>
+
+    <div style="width:50%; float: left; display: inline-block;">
+        <img src="https://www.pngmart.com/files/3/Stock-Market-Transparent-PNG.png" alt="welcome_image" 
+        style="display:block; margin-left: auto; margin-right: auto; margin-top: auto; margin-bottom:auto; width: 75%;"/>
+     </div>
+</div>
+}
+
+@if(@User.Identity?.Name != null)
+{
+<div class="text-center">
+    <h1 style="color: white;">Welcome @User.Identity?.Name</h1>
+    <h2>Long time no see</h2>
+    <h3>Please choose what you wanna do.</h3>
+    <di>
+        <a asp-controller="Stocks" asp-action="Index" class="btn btn-primary" style="width:150px">Stocks</a>
+    </di>
+</div>
+}
