@@ -1,0 +1,19 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> signInManager;
+@model IEnumerable<Stock>
+@{
+    ViewData["Title"] = @Model.First().Name;
+}
+
+<div class='containrer p-3'>
+    <div class= "row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">@Model.First().Name</h2>
+        </div>
+        <div class="col-6 text-end">
+            <h1>Prediction Successfull</h1>
+            <a asp-controller="Stocks" asp-action="Detail"  asp-route-Symbol="@Model.First().Symbol" class="btn btn-secondary" style="width:150px">Back</a>
+        </div>
+    </div>
+
+</div>
