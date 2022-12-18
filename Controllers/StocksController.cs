@@ -34,6 +34,44 @@ namespace dotnet.Controllers
             savedObj=obj;
             return View(obj);
         }
+        
+          [Authorize]
+        public IActionResult Predict(string? Symbol){
+            
+            IEnumerable<Stock?> obj= _db.Stocks!.OrderByDescending(y=>y.Date.Year).ThenByDescending(m=>m.Date.Month).ThenByDescending(d=>d.Date.Day).GroupBy(g=>g.Name).Select(g=>g.FirstOrDefault());
+            return View(obj);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetPrediction(string Symbol,int price){
+            
+            IEnumerable<Stock> obj= _db.Stocks!.OrderByDescending(y=>y.Date.Year).ThenByDescending(m=>m.Date.Month).ThenByDescending(d=>d.Date.Day).Where(n=> n.Symbol==Symbol).Take(10);
+
+            int vol=0;
+
+            foreach (var item in obj)
+            {
+                vol+=item.Volume;
+            }
+
+            vol=(vol/10);
+
+            Stock newObj= new Stock();
+            newObj.CloseorLast=price;
+            newObj.High=price;
+            newObj.Low=price;
+            newObj.Date=DateOnly.FromDateTime(DateTime.Now);
+            newObj.Open=price;
+            newObj.Symbol=Symbol;
+            newObj.Name=obj.ElementAt(0).Name;
+            newObj.Volume=vol;
+            
+            await _db.Stocks.AddAsync(newObj);
+            await _db.SaveChangesAsync();
+
+
+            return Ok(price);
+        }
 
         [Authorize]
         public IActionResult Graph(string? Symbol,int nod)
