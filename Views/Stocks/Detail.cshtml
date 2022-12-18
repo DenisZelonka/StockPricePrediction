@@ -12,7 +12,7 @@
         </div>
         <div class="col-6 text-end">
             @if(signInManager.IsSignedIn(User) && (User.IsInRole("admin") || User.IsInRole("superuser") )) {
-                <a asp-controller="Stocks" asp-action="Index" class="btn btn-primary" style="width:150px">Predict</a> }
+                <a asp-controller="Stocks" asp-action="Predict" asp-route-Symbol="@Model.First().Symbol" class="btn btn-primary" style="width:150px">Predict</a> }
                 <a asp-controller="Stocks" asp-action="Graph" asp-route-Symbol="@Model.First().Symbol" asp-route-nod=30 class="btn btn-primary" style="width: 150px;">Show Graph</a>
             <a asp-controller="Stocks" asp-action="Index" class="btn btn-secondary" style="width:150px">Back</a>
         </div>
