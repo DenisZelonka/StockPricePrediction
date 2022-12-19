@@ -35,42 +35,65 @@ namespace dotnet.Controllers
             return View(obj);
         }
         
-          [Authorize]
+         /*  [Authorize]
         public IActionResult Predict(string? Symbol){
             
             IEnumerable<Stock?> obj= _db.Stocks!.OrderByDescending(y=>y.Date.Year).ThenByDescending(m=>m.Date.Month).ThenByDescending(d=>d.Date.Day).GroupBy(g=>g.Name).Select(g=>g.FirstOrDefault());
             return View(obj);
-        }
+        }*/
 
-        [Authorize]
-        public async Task<IActionResult> GetPrediction(string Symbol,int price){
+        [Authorize(Roles ="admin,superuser")]
+        //[HttpPost]
+        
+        public async Task<IActionResult> Predict(string Symbol){
             
-            IEnumerable<Stock> obj= _db.Stocks!.OrderByDescending(y=>y.Date.Year).ThenByDescending(m=>m.Date.Month).ThenByDescending(d=>d.Date.Day).Where(n=> n.Symbol==Symbol).Take(10);
 
-            int vol=0;
-
-            foreach (var item in obj)
+            var payload= new 
             {
-                vol+=item.Volume;
-            }
+                name=Symbol,
+            };
 
-            vol=(vol/10);
 
-            Stock newObj= new Stock();
-            newObj.CloseorLast=price;
-            newObj.High=price;
-            newObj.Low=price;
-            newObj.Date=DateOnly.FromDateTime(DateTime.Now);
-            newObj.Open=price;
-            newObj.Symbol=Symbol;
-            newObj.Name=obj.ElementAt(0).Name;
-            newObj.Volume=vol;
+            using (var client = new HttpClient())
+            {
+
+                var response=client.PostAsJsonAsync("http://localhost:5000/prediction",payload);
+                
+                
+                var something= await response.Result.Content.ReadFromJsonAsync<Prediction>();
             
-            await _db.Stocks.AddAsync(newObj);
-            await _db.SaveChangesAsync();
+                float price=float.Parse(something.prediction,CultureInfo.InvariantCulture.NumberFormat);
+            
+                IEnumerable<Stock> obj= _db.Stocks!.OrderByDescending(y=>y.Date.Year).ThenByDescending(m=>m.Date.Month).ThenByDescending(d=>d.Date.Day).Where(n=> n.Symbol==Symbol).Take(10);
+
+                int vol=0;
+
+                foreach (var item in obj)
+                {
+                    vol+=item.Volume;
+                }
+
+                vol=(vol/10);
+
+                Stock newObj= new Stock();
+                newObj.CloseorLast=price;
+                newObj.High=price;
+                newObj.Low=price;
+                newObj.Date=DateOnly.FromDateTime(DateTime.Now);
+                newObj.Open=price;
+                newObj.Symbol=Symbol;
+                newObj.Name=obj.ElementAt(0).Name;
+                newObj.Volume=vol;
+                
+                await _db.Stocks.AddAsync(newObj);
+                await _db.SaveChangesAsync();
 
 
-            return Ok(price);
+                //return Ok(something.prediction);
+
+                return View(obj);
+            }
+            
         }
 
         [Authorize]
